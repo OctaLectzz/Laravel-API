@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -25,9 +27,9 @@ class PostController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string',
-            'slug' => 'required|unique:posts',
             'body' => 'required',
         ]);
+        $validatedData['created_by'] = Auth::user()->name;
 
         try {
             $post = Post::create($validatedData);
@@ -44,8 +46,11 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show($id)
     {
+        $post = Post::findOrFail($id);
+        $post->views++;
+        $post->save();
         return response()->json(['data' => $post]);
     }
 
@@ -55,15 +60,23 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string',
-            'slug' => 'required|unique:posts',
-            'body' => 'required',
-        ]);
+        $data = $request->validate(
+            [
+                'title' => 'required|string',
+                'body' => 'required',
+            ]);
+            $data['created_by'] = auth()->user()->name;
 
+            
         try {
-            $post->update($validatedData);
-            return response()->json(['data' => $post]);
+            $post->update($data);
+
+            return response()->json([
+                'message' => 'Post Updated Successfully',
+                'data' => [
+                    'post' => $post
+                ]
+            ]);
         } catch (\Throwable $th) {
             info($th);
             return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);

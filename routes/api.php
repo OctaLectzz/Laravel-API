@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,12 @@ Route::apiResource('users', UserController::class);
 
 
 // Post
-Route::apiResource('posts', PostController::class);
+Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
+
+
+// Comment
+Route::apiResource('/posts/{post}/comments', CommentController::class)->middleware('auth:sanctum');
+
+// Route::controller(CommentController::class)->group(function () {
+//     Route::put('/comments/{comments}', 'update');
+// });
