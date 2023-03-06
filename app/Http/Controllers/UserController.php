@@ -31,7 +31,10 @@ class UserController extends Controller
         try {
             $user = User::create($validatedData);
 
-            return response()->json(['data' => $user]);
+            return response()->json([
+                'message' => 'User Updated Successfully!',
+                'data' => $user
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
@@ -59,7 +62,10 @@ class UserController extends Controller
 
         try {
             $user->update($validatedData);
-            return response()->json(['data' => $user]);
+            return response()->json([
+                'message' => 'User Updated Successfully!',
+                'data' => $user
+            ]);
         } catch (\Throwable $th) {
             info($th);
             return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
@@ -74,7 +80,9 @@ class UserController extends Controller
         try {
             $user->delete();
     
-            return response()->json(['message' => 'User Deleted Successfully!'], 204);
+            return response()->json([
+                'message' => 'User Deleted Successfully!'
+            ], 204);
         } catch (\Throwable $th) {
             info($th);
             

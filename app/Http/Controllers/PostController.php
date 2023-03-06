@@ -31,10 +31,14 @@ class PostController extends Controller
         ]);
         $validatedData['created_by'] = Auth::user()->name;
 
+        
         try {
             $post = Post::create($validatedData);
 
-            return response()->json(['data' => $post]);
+            return response()->json([
+                'message' => 'Post Added Successfully!',
+                'data' => $post
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
@@ -60,22 +64,20 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $data = $request->validate(
+        $validatedData = $request->validate(
             [
                 'title' => 'required|string',
                 'body' => 'required',
             ]);
-            $data['created_by'] = auth()->user()->name;
+            $validatedData['created_by'] = auth()->user()->name;
 
             
         try {
-            $post->update($data);
+            $post->update($validatedData);
 
             return response()->json([
                 'message' => 'Post Updated Successfully',
-                'data' => [
-                    'post' => $post
-                ]
+                'data' => $post
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -92,7 +94,9 @@ class PostController extends Controller
         try {
             $post->delete();
     
-            return response()->json(['message' => 'Post Deleted Successfully!'], 204);
+            return response()->json([
+                'message' => 'Post Deleted Successfully!'
+            ], 204);
         } catch (\Throwable $th) {
             info($th);
             

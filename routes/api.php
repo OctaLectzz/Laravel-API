@@ -18,11 +18,6 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
 
 
 // Authentication
@@ -39,13 +34,12 @@ Route::middleware('auth:sanctum')->group( function () {
 Route::apiResource('users', UserController::class);
 
 
-// Post
-Route::apiResource('posts', PostController::class)->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
 
+    // Post
+    Route::apiResource('posts', PostController::class);
 
-// Comment
-Route::apiResource('/posts/{post}/comments', CommentController::class)->middleware('auth:sanctum');
+    // Comment
+    Route::apiResource('comments', CommentController::class);
 
-// Route::controller(CommentController::class)->group(function () {
-//     Route::put('/comments/{comments}', 'update');
-// });
+});

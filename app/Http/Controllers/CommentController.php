@@ -11,28 +11,31 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Post $post)
+    public function index()
     {
-        return $post->comments()->latest()->get();
+        $comments = Comment::latest()->get();
+
+        return response()->json(['data' => $comments]);
     }
 
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $postId)
+    public function store(Request $request) // $postId)
     {
         $validatedData = $request->validate([
             'content' => 'required'
         ]);
         $validatedData['user_id']  = auth()->id();
-        $validatedData['post_id']  = $postId;
+        $validatedData['post_id']  = 1; // $postId;
+
 
         try {
             $comment = Comment::create($validatedData);
          
             return response()->json([
-                'message' => 'Comment Created Successfully',
+                'message' => 'Comment Created Successfully!',
                 'data' => $comment
             ], 201);
         } catch (\Throwable $th) {
@@ -55,18 +58,24 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment, $postId)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'content' => 'required'
         ]);
-        $validatedData['user_id']  = 1; // auth()->id();
-        $validatedData['post_id']  = $postId;
 
+        
         try {
-            $comment->update($validatedData);
+            $comment = Comment::findOrFail($id);
+
+            $data = $request->all();
+            $data['user_id'] = auth()->id();
+            $comment->update($data);
          
-            return response()->json(['message' => 'Comment Updated Successfully', 'data' => $comment]);
+            return response()->json([
+                'message' => 'Comment Updated Successfully!',
+                'data' => $comment
+            ]);
         } catch (\Throwable $th) {
             info($th);
             return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);

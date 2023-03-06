@@ -11,9 +11,7 @@ class Post extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $guarded = [
-        'id'
-    ];
+    protected $guarded = ['id'];
 
     protected $attributes = [
         'views' => 0
