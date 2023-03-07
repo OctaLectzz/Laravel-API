@@ -36,13 +36,17 @@ class PostController extends Controller
             $post = Post::create($validatedData);
 
             return response()->json([
-                'message' => 'Post Added Successfully!',
+                'status' => 'Success',
+                'message' => 'Post Created Successfully!',
                 'data' => $post
             ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -76,12 +80,17 @@ class PostController extends Controller
             $post->update($validatedData);
 
             return response()->json([
-                'message' => 'Post Updated Successfully',
+                'status' => 'Success',
+                'message' => 'Post Updated Successfully!',
                 'data' => $post
             ]);
         } catch (\Throwable $th) {
             info($th);
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -95,12 +104,16 @@ class PostController extends Controller
             $post->delete();
     
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Post Deleted Successfully!'
-            ], 204);
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
@@ -21,10 +21,15 @@ use App\Http\Controllers\CommentController;
 
 
 // Authentication
-Route::controller(RegisterController::class)->group(function(){
+Route::controller(AuthenticationController::class)->group(function(){
     Route::post('register', 'register');
     Route::post('login', 'login');
+    Route::get('logout', 'logout')->middleware('auth:sanctum');
+    Route::post('reset-password', 'resetPassword')->middleware('auth:sanctum');
 });
+
+
+// Example
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('products', ProductController::class);
 });
@@ -34,6 +39,7 @@ Route::middleware('auth:sanctum')->group( function () {
 Route::apiResource('users', UserController::class);
 
 
+// Fitur
 Route::middleware('auth:sanctum')->group(function () {
 
     // Post

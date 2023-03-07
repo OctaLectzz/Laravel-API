@@ -35,13 +35,17 @@ class CommentController extends Controller
             $comment = Comment::create($validatedData);
          
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Comment Created Successfully!',
                 'data' => $comment
-            ], 201);
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -60,6 +64,10 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Check User
+        $this->middleware('check.comment.ownership')->only('update');
+
+
         $request->validate([
             'content' => 'required'
         ]);
@@ -73,12 +81,17 @@ class CommentController extends Controller
             $comment->update($data);
          
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Comment Updated Successfully!',
                 'data' => $comment
             ]);
         } catch (\Throwable $th) {
             info($th);
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -88,14 +101,24 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        // Check User
+        $this->middleware('check.comment.ownership')->only('delete');
+
+
         try {
             $comment->delete();
     
-            return response()->json(['message' => 'Comment Deleted Successfully!']);
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Comment Deleted Successfully!'
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 }

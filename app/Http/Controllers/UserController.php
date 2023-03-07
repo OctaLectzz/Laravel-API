@@ -28,17 +28,22 @@ class UserController extends Controller
         ]);
         $validatedData['password'] = bcrypt($request->password);
 
+
         try {
             $user = User::create($validatedData);
 
             return response()->json([
-                'message' => 'User Updated Successfully!',
+                'status' => 'Success',
+                'message' => 'User Created Successfully!',
                 'data' => $user
             ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -60,15 +65,22 @@ class UserController extends Controller
             'email' => 'required|email'
         ]);
 
+
         try {
             $user->update($validatedData);
+
             return response()->json([
+                'status' => 'Success',
                 'message' => 'User Updated Successfully!',
                 'data' => $user
             ]);
         } catch (\Throwable $th) {
             info($th);
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 
@@ -81,12 +93,16 @@ class UserController extends Controller
             $user->delete();
     
             return response()->json([
+                'status' => 'Success',
                 'message' => 'User Deleted Successfully!'
-            ], 204);
+            ]);
         } catch (\Throwable $th) {
             info($th);
             
-            return response()->json(['message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!']);
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
         }
     }
 }

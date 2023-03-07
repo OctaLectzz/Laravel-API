@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
    
 use App\Models\User;
@@ -64,4 +64,28 @@ class RegisterController extends BaseController
         } 
     }
 
+
+    /**
+     * Logout api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+    
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Logout Successfully!'
+            ]);
+        } catch (\Throwable $th) {
+            info($th);
+            
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
+        }
+    }
 }
