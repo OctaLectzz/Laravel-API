@@ -26,6 +26,9 @@ class CommentController extends Controller
     {
         $validatedData = $request->validate([
             'content' => 'required'
+        ],
+        [
+            'content.required' => 'Comment wajib di isi'
         ]);
         $validatedData['user_id']  = auth()->id();
         $validatedData['post_id']  = 1; // $postId;
@@ -70,6 +73,9 @@ class CommentController extends Controller
 
         $request->validate([
             'content' => 'required'
+        ],
+        [
+            'content.required' => 'Comment wajib di isi'
         ]);
 
         

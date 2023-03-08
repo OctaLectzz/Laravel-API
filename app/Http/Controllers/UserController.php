@@ -25,6 +25,11 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required|email'
+        ],
+        [
+            'name.required' => 'Nama wajib di isi',
+            'email.required' => 'Email wajib di isi',
+            'email.email' => 'Format email yang anda isikan salah, example@gmail.com'
         ]);
         $validatedData['password'] = bcrypt($request->password);
 
@@ -63,6 +68,11 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required|email'
+        ],
+        [
+            'name.required' => 'Nama wajib di isi',
+            'email.required' => 'Email wajib di isi',
+            'email.email' => 'Format email yang anda isikan salah, example@gmail.com'
         ]);
 
 

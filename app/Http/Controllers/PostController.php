@@ -28,6 +28,11 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string',
             'body' => 'required',
+        ],
+        [
+            'title.required' => 'Judul wajib di isi',
+            'title.string' => 'Judul harus bernilai string',
+            'body.required' => 'Post wajib memiliki konten'
         ]);
         $validatedData['created_by'] = Auth::user()->name;
 
@@ -72,6 +77,11 @@ class PostController extends Controller
             [
                 'title' => 'required|string',
                 'body' => 'required',
+            ],
+            [
+                'title.required' => 'Judul wajib di isi',
+                'title.string' => 'Judul harus bernilai string',
+                'body.required' => 'Post wajib memiliki konten'
             ]);
             $validatedData['created_by'] = auth()->user()->name;
 

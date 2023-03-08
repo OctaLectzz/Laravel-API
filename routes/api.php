@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,14 +20,13 @@ use App\Http\Controllers\CommentController;
 */
 
 
-
 // Authentication
 Route::controller(AuthenticationController::class)->group(function(){
     Route::post('register', 'register');
-    Route::post('login', 'login');
+    Route::post('/login', 'login');
     Route::get('logout', 'logout')->middleware('auth:sanctum');
-    Route::post('reset-password', 'resetPassword')->middleware('auth:sanctum');
-    Route::post('/update-password/{id}', 'updatePassword')->middleware('auth:sanctum');
+    Route::post('/forgot-password', 'forgotPassword')->middleware('auth:sanctum');
+    Route::post('/reset-password', 'reset');
 });
 
 
