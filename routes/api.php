@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +21,15 @@ use App\Http\Controllers\ResetPasswordController;
 
 // Authentication
 Route::controller(AuthenticationController::class)->group(function(){
+    // Register
     Route::post('register', 'register');
-    Route::post('/login', 'login');
+    // Login
+    Route::post('/login', 'login')->middleware('throttle:6,30');
+    // Logout
     Route::get('logout', 'logout')->middleware('auth:sanctum');
-    Route::post('/forgot-password', 'forgotPassword')->middleware('auth:sanctum');
-    Route::post('/reset-password', 'reset');
+    // Change Password
+    Route::post('/forgot-password', 'forgotPassword')->middleware(['auth:sanctum', 'throttle:6,30']);
+    Route::post('/reset-password', 'reset')->middleware('throttle:6,30');
 });
 
 
@@ -40,13 +43,30 @@ Route::middleware('auth:sanctum')->group( function () {
 Route::apiResource('users', UserController::class);
 
 
-// Fitur
+// ----Post---- //
+Route::prefix('posts')->controller(PostController::class)->group(function () {
+    //All Posts
+    Route::get('/', 'index');
+    //Show 1 Post
+    Route::get('/{id}', 'show');
+    // Create Post
+    Route::post('/create', 'store')->middleware('auth:sanctum');
+    // Update Post
+    Route::put('/update/{post}', 'update')->middleware('auth:sanctum');
+    // Delete Post
+    Route::delete('/delete/{post}', 'destroy')->middleware('auth:sanctum');
+});
+// Route::apiResource('posts', PostController::class);
+
+
+// Comment
+Route::apiResource('comments', CommentController::class);
+
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Post
-    Route::apiResource('posts', PostController::class);
 
-    // Comment
-    Route::apiResource('comments', CommentController::class);
 
 });

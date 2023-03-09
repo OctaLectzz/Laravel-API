@@ -13,7 +13,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::latest()->get();
+        $comments = Comment::paginate(10)->latest()->get();
 
         return response()->json(['data' => $comments]);
     }

@@ -99,16 +99,23 @@ class AuthenticationController extends BaseController
                 $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
                 $success['name'] =  $user->name;
     
-                return $this->sendResponse($success, [
+                return response()->json([
                     'status' => 'Success',
-                    'message' => 'User Login Successfully!'
+                    'message' => 'User Login Successfully!',
+                    'data' => $success
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Terjadi kesalahan data, Silahkan cek kembali Email dan Password anda'
                 ]);
             }
         } catch (\Throwable $th) { 
             info($th);
 
-            return $this->sendError('Unauthorised.', [
-                'error' => 'Unauthorised'
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!   '
             ]);
         }
     }
