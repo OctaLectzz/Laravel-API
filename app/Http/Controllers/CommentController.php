@@ -13,7 +13,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(10)->latest()->get();
+        $comments = Comment::paginate(10);
 
         return response()->json(['data' => $comments]);
     }
@@ -67,10 +67,6 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Check User
-        $this->middleware('check.comment.ownership')->only('update');
-
-
         $request->validate([
             'content' => 'required'
         ],
@@ -107,10 +103,6 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        // Check User
-        $this->middleware('check.comment.ownership')->only('delete');
-
-
         try {
             $comment->delete();
     

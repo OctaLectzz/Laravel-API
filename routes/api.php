@@ -19,6 +19,16 @@ use App\Http\Controllers\CommentController;
 */
 
 
+
+
+// Example
+Route::middleware('auth:sanctum')->group( function () {
+    Route::resource('products', ProductController::class);
+});
+
+
+
+
 // Authentication
 Route::controller(AuthenticationController::class)->group(function(){
     // Register
@@ -33,14 +43,10 @@ Route::controller(AuthenticationController::class)->group(function(){
 });
 
 
-// Example
-Route::middleware('auth:sanctum')->group( function () {
-    Route::resource('products', ProductController::class);
-});
-
 
 // User
 Route::apiResource('users', UserController::class);
+
 
 
 // ----Post---- //
@@ -51,16 +57,35 @@ Route::prefix('posts')->controller(PostController::class)->group(function () {
     Route::get('/{id}', 'show');
     // Create Post
     Route::post('/create', 'store')->middleware('auth:sanctum');
-    // Update Post
-    Route::put('/update/{post}', 'update')->middleware('auth:sanctum');
+    // Edit Post
+    Route::put('/edit/{post}', 'update')->middleware('auth:sanctum');
     // Delete Post
     Route::delete('/delete/{post}', 'destroy')->middleware('auth:sanctum');
 });
 // Route::apiResource('posts', PostController::class);
 
 
+
 // Comment
-Route::apiResource('comments', CommentController::class);
+Route::prefix('comments')->controller(CommentController::class)->group(function () {
+    //All Comments
+    Route::get('/', 'index');
+    //Show 1 Comment
+    Route::get('/{id}', 'show');
+    // Create Comment
+    Route::post('/create', 'store')->middleware(['auth:sanctum', 'throttle:6,10']);
+    // Edit Comment
+    Route::put('/edit/{comment}', 'update')->middleware(['auth:sanctum', 'check.comment.ownership', 'throttle:6,10']);
+    // Delete Comment
+    Route::delete('/delete/{comment}', 'destroy')->middleware('auth:sanctum');
+});
+// Route::apiResource('comments', CommentController::class);
+
+
+
+
+
+
 
 
 
