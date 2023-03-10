@@ -40,7 +40,6 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'User Created Successfully!',
-                'data' => $user
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -82,7 +81,6 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'User Updated Successfully!',
-                'data' => $user
             ]);
         } catch (\Throwable $th) {
             info($th);

@@ -18,6 +18,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 class AuthenticationController extends BaseController
 
 {
+
     /**
      * Register api
      *
@@ -50,12 +51,12 @@ class AuthenticationController extends BaseController
             $user = User::create($input);
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['name'] =  $user->name;
-       
+
             Auth::login($user);
 
             return $this->sendResponse($success, [
                 'status' => 'Success',
-                'message' => 'User Register Successfully!'
+                'message' => 'Register Successfully!'
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -101,7 +102,7 @@ class AuthenticationController extends BaseController
     
                 return response()->json([
                     'status' => 'Success',
-                    'message' => 'User Login Successfully!',
+                    'message' => 'Login Successfully!',
                     'data' => $success
                 ]);
             } else {
@@ -153,13 +154,13 @@ class AuthenticationController extends BaseController
      */
     public function forgotPassword(Request $request)
     {
-
         $request->validate([
             'email' => "required|email"
         ], [
             'email.required' => 'Email wajib di isi',
             'email.email' => 'Format email yang anda isikan salah, example@yahoo.com',
         ]);
+
 
         try {
             Password::sendResetLink(
@@ -168,7 +169,7 @@ class AuthenticationController extends BaseController
 
             return response()->json([
                 'status' => 'Success',
-                'message' => 'Link reset password berhasil di kirim',
+                'message' => 'Token Reset Password berhasil di kirim, Silahkan cek Email anda untuk mendapatkannya.',
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -194,8 +195,8 @@ class AuthenticationController extends BaseController
             'password' => ['required', 'confirmed', RulesPassword::defaults()],
         ]);
 
-        try {
 
+        try {
             $status = Password::reset(
                 $request->only('email', 'password', 'password_confirmation', 'token'),
                 function ($user) use ($request) {
@@ -210,18 +211,19 @@ class AuthenticationController extends BaseController
                 }
             );
 
-            // Jika token tidak valid atau kadaluarsa
+            // Jika Token tidak Valid atau Kadaluwarsa
             if ($status == Password::INVALID_TOKEN) {
                 return response()->json([
                     'status' => 'Error',
-                    'message' => 'Token tidak valid atau sudah kadaluarsa.'
+                    'message' => 'Token tidak valid atau sudah Kadaluwarsa.'
                 ], 422);
             }
 
+            // Jika Token Valid atau Benar
             if ($status == Password::PASSWORD_RESET) {
                 return response()->json([
                     "status" => "Success",
-                    "massage" => "Reset password berhasil"
+                    "massage" => "Reset Password berhasil"
                 ], 200);
             }
         } catch (\Throwable $th) {
@@ -233,4 +235,5 @@ class AuthenticationController extends BaseController
             ]);
         }
     }
+
 }

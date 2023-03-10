@@ -21,7 +21,7 @@ use App\Http\Controllers\CommentController;
 
 
 
-// Example
+// ----Example Laravel Sanctum---- //
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('products', ProductController::class);
 });
@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
 
 
-// Authentication
+// ----Authenticate---- //
 Route::controller(AuthenticationController::class)->group(function(){
     // Register
     Route::post('register', 'register');
@@ -43,17 +43,27 @@ Route::controller(AuthenticationController::class)->group(function(){
 });
 
 
-
-// User
-Route::apiResource('users', UserController::class);
-
+// ----User---- //
+Route::prefix('users')->controller(UserController::class)->group(function () {
+    // All Users
+    Route::get('/', 'index');
+    // Show 1 User
+    Route::get('/{id}', 'show');
+    // Create User
+    Route::post('/create', 'store')->middleware('auth:sanctum');
+    // Edit User
+    Route::put('/edit/{user}', 'update')->middleware('auth:sanctum');
+    // Delete User
+    Route::delete('/delete/{user}', 'destroy')->middleware('auth:sanctum');
+});
+// Route::apiResource('users', UserController::class);
 
 
 // ----Post---- //
 Route::prefix('posts')->controller(PostController::class)->group(function () {
-    //All Posts
+    // All Posts
     Route::get('/', 'index');
-    //Show 1 Post
+    // Show 1 Post
     Route::get('/{id}', 'show');
     // Create Post
     Route::post('/create', 'store')->middleware('auth:sanctum');
@@ -65,33 +75,25 @@ Route::prefix('posts')->controller(PostController::class)->group(function () {
 // Route::apiResource('posts', PostController::class);
 
 
+// ----Comment---- //
+Route::controller(CommentController::class)->group(function () {
 
-// Comment
-Route::prefix('comments')->controller(CommentController::class)->group(function () {
-    //All Comments
-    Route::get('/', 'index');
-    //Show 1 Comment
-    Route::get('/{id}', 'show');
     // Create Comment
-    Route::post('/create', 'store')->middleware(['auth:sanctum', 'throttle:6,10']);
-    // Edit Comment
-    Route::put('/edit/{comment}', 'update')->middleware(['auth:sanctum', 'check.comment.ownership', 'throttle:6,10']);
-    // Delete Comment
-    Route::delete('/delete/{comment}', 'destroy')->middleware('auth:sanctum');
+    Route::post('/posts/{postId}/comments/create', 'store')->middleware(['auth:sanctum', 'throttle:6,10']);
+    
+    // Show Comment in Post
+    Route::get('posts/{post}/comments', 'show');
+
+    Route::prefix('comments')->group(function () {
+        // All Comments
+        Route::get('/', 'index');
+        // Show 1 Comment
+        Route::get('/{id}', 'show');
+        // Edit Comment
+        Route::put('/edit/{comment}', 'update')->middleware(['auth:sanctum', 'check.comment.ownership', 'throttle:6,10']);
+        // Delete Comment
+        Route::delete('/delete/{comment}', 'destroy')->middleware('auth:sanctum');
+    });
+
 });
 // Route::apiResource('comments', CommentController::class);
-
-
-
-
-
-
-
-
-
-
-Route::middleware('auth:sanctum')->group(function () {
-
-
-
-});

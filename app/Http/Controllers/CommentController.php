@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +23,7 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) // $postId)
+    public function store(Request $request, $postId)
     {
         $validatedData = $request->validate([
             'content' => 'required'
@@ -31,7 +32,7 @@ class CommentController extends Controller
             'content.required' => 'Comment wajib di isi'
         ]);
         $validatedData['user_id']  = auth()->id();
-        $validatedData['post_id']  = 1; // $postId;
+        $validatedData['post_id']  = $postId;
 
 
         try {
@@ -40,7 +41,6 @@ class CommentController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Comment Created Successfully!',
-                'data' => $comment
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -56,9 +56,11 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Post $post)
     {
-        return response()->json(['data' => $comment]);
+        $comments = $post->comments()->paginate(10);
+        
+        return response()->json($comments);
     }
 
 
@@ -85,7 +87,6 @@ class CommentController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Comment Updated Successfully!',
-                'data' => $comment
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -119,4 +120,5 @@ class CommentController extends Controller
             ]);
         }
     }
+
 }
