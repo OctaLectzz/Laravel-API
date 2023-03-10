@@ -44,7 +44,6 @@ Route::controller(AuthenticationController::class)->group(function(){
 
 
 // ----User---- //
-<<<<<<< HEAD
 Route::prefix('users')->controller(UserController::class)->group(function () {
     // All Users
     Route::get('/', 'index');
@@ -58,10 +57,7 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::delete('/delete/{user}', 'destroy')->middleware('auth:sanctum');
 });
 // Route::apiResource('users', UserController::class);
-=======
-Route::apiResource('users', UserController::class);
 
->>>>>>> 72a09bc6e47e95115c1fa52d831d8a534fadcd4a
 
 // ----Post---- //
 Route::prefix('posts')->controller(PostController::class)->group(function () {
