@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +44,6 @@ class PostController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Post Created Successfully!',
-                'data' => $post
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -93,7 +93,6 @@ class PostController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Post Updated Successfully!',
-                'data' => $post
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -127,4 +126,5 @@ class PostController extends Controller
             ]);
         }
     }
+    
 }
