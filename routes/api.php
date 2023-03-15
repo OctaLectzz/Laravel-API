@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\AuthenticationController;
 
 /*
@@ -69,6 +70,11 @@ Route::prefix('posts')->controller(PostController::class)->group(function () {
     Route::put('/edit/{post}', 'update')->middleware('auth:sanctum');
     // Delete Post
     Route::delete('/delete/{post}', 'destroy')->middleware('auth:sanctum');
+    // Like & Unlike Post
+    Route::middleware('auth:sanctum')->controller(PostLikeController::class)->group(function () {
+        Route::post('/{postId}/like', 'like');
+        Route::delete('/{postId}/like', 'unlike');
+    });    
 });
 // Route::apiResource('posts', PostController::class);
 

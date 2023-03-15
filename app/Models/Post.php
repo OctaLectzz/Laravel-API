@@ -39,6 +39,11 @@ class Post extends Model
         return $this->belongsToMany(Tag::class, "post_tag", "post_id", "tag_id");
     }
 
+    public function likes()
+    {
+        return $this->hasMany(PostLike::class);
+    }
+
 
     // Mutators
     protected function createdAtFormat(): Attribute
