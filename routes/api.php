@@ -87,7 +87,7 @@ Route::prefix('posts')->group(function () {
     // Save Post
     Route::controller(PostSaveController::class)->middleware('auth:sanctum')->group(function () {
         // All Saved Posts
-        Route::get('/saved-posts', 'index');
+        Route::get('/postsave/posts', [PostSaveController::class, 'index'])->middleware('auth:sanctum');
         // Save Post
         Route::post('/{postId}/save', 'save');
         // Unsave Post
