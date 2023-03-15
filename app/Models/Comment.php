@@ -18,6 +18,7 @@ class Comment extends Model
     protected $guarded = [
         'id'
     ];
+
     protected $appends = [
         'created_at_format',
         'updated_at_format'
@@ -29,6 +30,7 @@ class Comment extends Model
     {
         return $this->belongsTo(Post::class);
     }
+
     public function user()
     {
         return $this->belongsTo(Post::class);
@@ -44,6 +46,7 @@ class Comment extends Model
             },
         );
     }
+    
     protected function updatedAtFormat(): Attribute
     {
         return Attribute::make(

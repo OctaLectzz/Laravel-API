@@ -17,9 +17,11 @@ class Post extends Model
     protected $guarded = [
         'id'
     ];
+
     protected $attributes = [
         'views' => 0
     ];
+
     protected $appends = [
         'created_at_format',
         'updated_at_format'
@@ -32,6 +34,11 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function tag()
+    {
+        return $this->belongsToMany(Tag::class, "post_tag", "post_id", "tag_id");
+    }
+
 
     // Mutators
     protected function createdAtFormat(): Attribute
@@ -42,6 +49,7 @@ class Post extends Model
             },
         );
     }
+    
     protected function updatedAtFormat(): Attribute
     {
         return Attribute::make(

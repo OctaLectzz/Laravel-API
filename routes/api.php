@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,14 +21,10 @@ use App\Http\Controllers\CommentController;
 */
 
 
-
-
 // ----Example Laravel Sanctum---- //
 Route::middleware('auth:sanctum')->group( function () {
     Route::resource('products', ProductController::class);
 });
-
-
 
 
 // ----Authenticate---- //
@@ -97,3 +95,19 @@ Route::controller(CommentController::class)->group(function () {
 
 });
 // Route::apiResource('comments', CommentController::class);
+
+
+// ----Tag---- //
+Route::prefix('tags')->controller(TagController::class)->group(function () {
+    // All Tags
+    Route::get('/', 'index');
+    // Show 1 Tag
+    Route::get('/{id}', 'show');
+    // Create Tag
+    Route::post('/create', 'store')->middleware('auth:sanctum');
+    // Edit Tag
+    Route::put('/edit/{tag}', 'update')->middleware('auth:sanctum');
+    // Delete Tag
+    Route::delete('/delete/{tag}', 'destroy')->middleware('auth:sanctum');
+});
+// Route::apiResource('posts', PostController::class);

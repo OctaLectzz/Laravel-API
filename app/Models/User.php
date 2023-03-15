@@ -76,6 +76,7 @@ class User extends Authenticatable
             },
         );
     }
+    
     protected function updatedAtFormat(): Attribute
     {
         return Attribute::make(
