@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PostLikeController;
+use App\Http\Controllers\PostSaveController;
 use App\Http\Controllers\AuthenticationController;
 
 /*
@@ -59,22 +60,40 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
 
 
 // ----Post---- //
-Route::prefix('posts')->controller(PostController::class)->group(function () {
-    // All Posts
-    Route::get('/', 'index');
-    // Show 1 Post
-    Route::get('/{id}', 'show');
-    // Create Post
-    Route::post('/create', 'store')->middleware('auth:sanctum');
-    // Edit Post
-    Route::put('/edit/{post}', 'update')->middleware('auth:sanctum');
-    // Delete Post
-    Route::delete('/delete/{post}', 'destroy')->middleware('auth:sanctum');
-    // Like & Unlike Post
-    Route::middleware('auth:sanctum')->controller(PostLikeController::class)->group(function () {
+Route::prefix('posts')->group(function () {
+
+    // Post
+    Route::controller(PostController::class)->group(function () {
+        // All Posts
+        Route::get('/', 'index');
+        // Show 1 Post
+        Route::get('/{id}', 'show');
+        // Create Post
+        Route::post('/create', 'store')->middleware('auth:sanctum');
+        // Edit Post
+        Route::put('/edit/{post}', 'update')->middleware('auth:sanctum');
+        // Delete Post
+        Route::delete('/delete/{post}', 'destroy')->middleware('auth:sanctum');
+    });
+
+    // Like Post
+    Route::controller(PostLikeController::class)->middleware('auth:sanctum')->group(function () {
+        // Like Post
         Route::post('/{postId}/like', 'like');
+        // Unlike Post
         Route::delete('/{postId}/like', 'unlike');
-    });    
+    });
+
+    // Save Post
+    Route::controller(PostSaveController::class)->middleware('auth:sanctum')->group(function () {
+        // All Saved Posts
+        Route::get('/saved-posts', 'index');
+        // Save Post
+        Route::post('/{postId}/save', 'save');
+        // Unsave Post
+        Route::delete('/{postId}/save', 'unsave');
+    });
+
 });
 // Route::apiResource('posts', PostController::class);
 

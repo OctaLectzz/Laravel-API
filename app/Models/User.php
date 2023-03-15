@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasMany(PostLike::class);
     }
 
+    public function saves()
+    {
+        return $this->belongsToMany(Post::class, 'post_saves');
+    }
+
 
     // Reset Password
     public function sendPasswordResetNotification($token)

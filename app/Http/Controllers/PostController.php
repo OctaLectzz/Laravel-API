@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,9 @@ class PostController extends Controller
     {
         $posts = Post::paginate(10);
 
-        return response()->json(['data' => $posts]);
+        return response()->json([
+            'data' => PostResource::collection($posts)
+        ]);
     }
 
 
@@ -65,7 +68,7 @@ class PostController extends Controller
         $post->views++;
         $post->save();
         
-        return response()->json(['data' => $post]);
+        return response()->json(['data' => new PostResource($post)]);
     }
 
 

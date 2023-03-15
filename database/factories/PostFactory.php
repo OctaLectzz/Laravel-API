@@ -22,7 +22,7 @@ class PostFactory extends Factory
                         ->map(fn($p) => "<p>$p</p>")
                         ->implode(''),
             'created_by' => $this->faker->name(),
-            'views' => mt_rand(0, 100)
+            'views' => mt_rand(0, 1000)
         ];
     }
 }

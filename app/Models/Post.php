@@ -43,6 +43,11 @@ class Post extends Model
     {
         return $this->hasMany(PostLike::class);
     }
+    
+    public function saves()
+    {
+        return $this->belongsToMany(User::class, 'post_saves');
+    }
 
 
     // Mutators
