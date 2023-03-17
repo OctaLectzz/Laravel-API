@@ -14,13 +14,11 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Post $post)
     {
         $posts = Post::paginate(10);
 
-        return response()->json([
-            'data' => PostResource::collection($posts)
-        ]);
+        return PostResource::collection($posts);
     }
 
 
@@ -32,17 +30,20 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string',
             'body' => 'required',
+            'tag' => 'integer'
         ],
         [
             'title.required' => 'Judul wajib di isi',
             'title.string' => 'Judul harus bernilai string',
-            'body.required' => 'Post wajib memiliki konten'
+            'body.required' => 'Post wajib memiliki konten',
+            'tag.integer' => 'pastikan anda memasukan id Tag yang benar'
         ]);
         $validatedData['created_by'] = Auth::user()->name;
 
         
         try {
             $post = Post::create($validatedData);
+            $post->tag()->attach($request->tags);
 
             return response()->json([
                 'status' => 'Success',
@@ -68,7 +69,9 @@ class PostController extends Controller
         $post->views++;
         $post->save();
         
-        return response()->json(['data' => new PostResource($post)]);
+        return response()->json([
+            'data' => new PostResource($post),
+        ]);
     }
 
 
@@ -91,6 +94,7 @@ class PostController extends Controller
 
             
         try {
+            $post->tag()->sync($request->tags);
             $post->update($validatedData);
 
             return response()->json([
@@ -114,6 +118,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         try {
+            $post->tag()->detach();
             $post->delete();
     
             return response()->json([

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
         // User Create
         User::factory(50)->create();
         User::create([
@@ -26,19 +27,24 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
 
+
+        // Tag Create
+        $tags = Tag::factory(50)->create();
+
         // Post Create
-        Post::factory(50)->create();
+        Post::factory(50)->create()->each(function ($post) use ($tags) {
+            $post->tag()->attach(
+                $tags->random(rand(1, 8))->pluck('id')->toArray()
+            );
+        });
         // Post Like Create
         PostLike::factory(500)->create();
         // Post Save Create
         PostSave::factory(500)->create();
 
+
         // Comment Create
         Comment::factory(100)->create();
-
-        // Tag Create
-        Tag::factory(50)->create();
-
 
     }
 }

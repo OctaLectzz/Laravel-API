@@ -24,7 +24,8 @@ class PostResource extends JsonResource
             'saves' => $this->saves->count(),
             'created_by' => $this->created_by,
             'created_at' => $this->created_at_format,
-            'updated_at' => $this->updated_at_format
+            'updated_at' => $this->updated_at_format,
+            'tags' => $this->tag->pluck('name')
         ];
     }
 }
