@@ -33,7 +33,14 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(User::class);
+    }
+    
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['name'] = $this->user->name;
+        return $array;
     }
 
 

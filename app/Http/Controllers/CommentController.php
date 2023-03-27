@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
@@ -14,7 +16,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(10);
+        $comments = Comment::latest()->get();
 
         return response()->json(['data' => $comments]);
     }
@@ -58,9 +60,9 @@ class CommentController extends Controller
      */
     public function show(Post $post)
     {
-        $comments = $post->comments()->paginate(10);
+        $comments = $post->comments()->latest()->get();
         
-        return response()->json($comments);
+        return CommentResource::collection($comments);
     }
 
 
