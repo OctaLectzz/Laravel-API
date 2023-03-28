@@ -18,7 +18,7 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'body' => strip_tags($this->body),
+            'body' => $this->body,
             'views' => $this->views,
             'likes' => $this->likes->count(),
             'saves' => $this->saves->count(),

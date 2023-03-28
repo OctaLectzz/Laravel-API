@@ -6,7 +6,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\PostSaveController;
 use App\Http\Controllers\AuthenticationController;
@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
 
 // ----Authenticate---- //
-Route::controller(AuthenticationController::class)->group(function(){
+Route::prefix('auth')->controller(AuthenticationController::class)->group(function(){
     // Register
     Route::post('register', 'register');
     // Login
