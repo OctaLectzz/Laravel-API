@@ -169,7 +169,7 @@ class AuthenticationController extends BaseController
 
             return response()->json([
                 'status' => 'Success',
-                'message' => 'Token Reset Password berhasil di kirim, Silahkan cek Email anda untuk mendapatkannya.',
+                'message' => 'Token Reset Password berhasil di kirim, Silahkan cek Email anda untuk mendapatkannya, Silakan tunggu 10 detik untuk ke halaman Reset Password',
             ]);
         } catch (\Throwable $th) {
             info($th);
@@ -223,7 +223,7 @@ class AuthenticationController extends BaseController
             if ($status == Password::PASSWORD_RESET) {
                 return response()->json([
                     "status" => "Success",
-                    "massage" => "Reset Password berhasil"
+                    "message" => "Reset Password berhasil"
                 ], 200);
             }
         } catch (\Throwable $th) {

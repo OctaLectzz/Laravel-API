@@ -38,7 +38,7 @@ Route::prefix('auth')->controller(AuthenticationController::class)->group(functi
     // Logout
     Route::get('logout', 'logout')->middleware('auth:sanctum');
     // Change Password
-    Route::post('/forgot-password', 'forgotPassword')->middleware(['auth:sanctum', 'throttle:6,30']);
+    Route::post('/forgot-password', 'forgotPassword')->middleware('throttle:6,30');
     Route::post('/reset-password', 'reset')->middleware('throttle:6,30');
 });
 
@@ -102,7 +102,7 @@ Route::prefix('posts')->group(function () {
 Route::controller(CommentController::class)->group(function () {
 
     // Create Comment
-    Route::post('/posts/{postId}/comments/create', 'store')->middleware(['auth:sanctum', 'throttle:6,10']);
+    Route::post('/posts/{postId}/comments/create', 'store')->middleware(['auth:sanctum']);
     
     // Show Comment in Post
     Route::get('posts/{post}/comments', 'show');

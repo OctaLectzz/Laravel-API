@@ -26,6 +26,7 @@ class PostResource extends JsonResource
             'created_at' => $this->created_at_format,
             'updated_at' => $this->updated_at_format,
             'tags' => $this->tag->pluck('name'),
+            'comment' => $this->comments ? $this->comments : null
         ];
     }
 }

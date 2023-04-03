@@ -43,6 +43,7 @@ class CommentController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Comment Created Successfully!',
+                'data' => $comment
             ]);
         } catch (\Throwable $th) {
             info($th);

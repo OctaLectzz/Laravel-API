@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
 
 
         // Comment Create
-        Comment::factory(200)->create();
+        // Comment::factory(200)->create();
 
     }
 }
