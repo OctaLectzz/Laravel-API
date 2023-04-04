@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -54,9 +56,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show()
     {
-        return response()->json(['data' => $user]);
+        $user = auth()->user();
+        return response()->json([
+            'data' => new UserResource($user)
+        ]);
     }
 
     /**
@@ -107,6 +112,41 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             info($th);
             
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
+        }
+    }
+
+    public function profile(Request $request, User $name)
+    {
+        // Validate Request //
+        $data = $request->validate(
+            [
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'tanggal_lahir' => 'date',
+                'jenis_kelamin' => 'string',
+                'alamat' => 'max:255'
+            ]
+        );
+        $data['biodata'] = $request->biodata;
+        
+
+        try {
+            $users = Auth::user();
+            $findUser = User::find($users->id);
+            $findUser->update($data);
+
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Profile Updated Successfully!',
+                'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            info($th);
+
             return response()->json([
                 'status' => 'Failed',
                 'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'

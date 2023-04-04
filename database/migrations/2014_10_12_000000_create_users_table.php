@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('tanggal_lahir')->nullable();
+            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan'])->nullable();
+            $table->string('role');
+            $table->string('alamat')->nullable();
+            $table->text('biodata')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

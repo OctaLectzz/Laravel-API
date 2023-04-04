@@ -48,7 +48,7 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     // All Users
     Route::get('/', 'index');
     // Show 1 User
-    Route::get('/{id}', 'show');
+    Route::get('/profile', 'show')->middleware('auth:sanctum');
     // Create User
     Route::post('/create', 'store')->middleware('auth:sanctum');
     // Edit User
@@ -56,6 +56,8 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     // Delete User
     Route::delete('/delete/{user}', 'destroy')->middleware('auth:sanctum');
 });
+// Profile
+Route::put('/profile/edit', [UserController::class, 'profile'])->middleware('auth:sanctum');
 // Route::apiResource('users', UserController::class);
 
 
