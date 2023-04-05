@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('post_tag', function (Blueprint $table) {
-            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('post_id')->onDelete('cascade');
             $table->foreign('post_id')->references('id')->on('posts');
 
             $table->unsignedBigInteger('tag_id')->onDelete('cascade');
