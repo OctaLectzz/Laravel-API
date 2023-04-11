@@ -34,12 +34,12 @@ Route::prefix('auth')->controller(AuthenticationController::class)->group(functi
     // Register
     Route::post('register', 'register');
     // Login
-    Route::post('/login', 'login')->middleware('throttle:6,30');
+    Route::post('/login', 'login');
     // Logout
     Route::get('logout', 'logout')->middleware('auth:sanctum');
     // Change Password
-    Route::post('/forgot-password', 'forgotPassword')->middleware('throttle:6,30');
-    Route::post('/reset-password', 'reset')->middleware('throttle:6,30');
+    Route::post('/forgot-password', 'forgotPassword');
+    Route::post('/reset-password', 'reset');
 });
 
 
@@ -138,3 +138,5 @@ Route::prefix('tags')->controller(TagController::class)->group(function () {
     Route::delete('/delete/{tag}', 'destroy')->middleware('auth:sanctum');
 });
 // Route::apiResource('posts', PostController::class);
+// Post Tag
+Route::get('/tagpost', [TagController::class, 'getpost']);

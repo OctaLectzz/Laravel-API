@@ -14,9 +14,13 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Post $post)
+    public function index(Request $request, Post $post)
     {
-        $posts = Post::paginate(12);
+        $tag = $request->query('tag');
+
+        $posts = $tag ? $post->whereHas('tag', function ($query) use ($tag) {
+            $query->where('name', $tag);
+        })->paginate(20) : $post->paginate(12);
 
         return PostResource::collection($posts);
     }
@@ -70,7 +74,7 @@ class PostController extends Controller
         $post->save();
         
         return response()->json([
-            'data' => new PostResource($post),
+            'data' => new PostResource($post)
         ]);
     }
 

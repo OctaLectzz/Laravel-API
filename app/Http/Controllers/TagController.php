@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Http\Resources\TagResource;
 use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
@@ -15,7 +16,14 @@ class TagController extends Controller
     {
         $tags = Tag::paginate(10);
 
-        return response()->json(['data' => $tags]);
+        return TagResource::collection($tags);
+    }
+
+    public function getpost()
+    {
+        $tagPost = Tag::latest()->get();
+
+        return TagResource::collection($tagPost);
     }
 
     /**
@@ -59,7 +67,7 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        return response()->json(['data' => $tag]);
+        return response()->json(['data' => new TagResource($tag)]);
     }
 
     /**

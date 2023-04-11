@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         // Post Create
         Post::factory(50)->create()->each(function ($post) use ($tags) {
             $post->tag()->attach(
-                $tags->random(rand(1, 8))->pluck('id')->toArray()
+                $tags->random(rand(1, 20))->pluck('id')->toArray()
             );
         });
         // Post Like Create
