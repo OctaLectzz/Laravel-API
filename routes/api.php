@@ -105,6 +105,8 @@ Route::controller(CommentController::class)->group(function () {
 
     // Create Comment
     Route::post('/posts/{postId}/comments/create', 'store')->middleware(['auth:sanctum']);
+    // Reply Comment
+    Route::post('/posts/{postId}/comments/{commentId}/reply', 'reply')->middleware(['auth:sanctum']);
     
     // Show Comment in Post
     Route::get('posts/{post}/comments', 'show');
@@ -115,7 +117,7 @@ Route::controller(CommentController::class)->group(function () {
         // Show 1 Comment
         Route::get('/{id}', 'show');
         // Edit Comment
-        Route::put('/edit/{comment}', 'update')->middleware(['auth:sanctum', 'check.comment.ownership', 'throttle:6,10']);
+        Route::put('/edit/{comment}', 'update')->middleware(['auth:sanctum', 'check.comment.ownership']);
         // Delete Comment
         Route::delete('/delete/{comment}', 'destroy')->middleware('auth:sanctum');
     });

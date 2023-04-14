@@ -18,7 +18,7 @@ class CommentController extends Controller
     {
         $comments = Comment::latest()->get();
 
-        return response()->json(['data' => $comments]);
+        return CommentResource::collection($comments);
     }
 
 
@@ -90,6 +90,37 @@ class CommentController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Comment Updated Successfully!',
+            ]);
+        } catch (\Throwable $th) {
+            info($th);
+            
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Terjadi Kesalahan Sistem, Silahkan coba beberapa saat lagi!'
+            ]);
+        }
+    }
+
+
+    public function reply(Request $request, Comment $comment, $postId, $commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+
+        $request->validate([
+            'content' => 'required|max:255',
+        ]);
+
+        try {
+            $reply = new Comment;
+            $reply->post_id = $postId;
+            $reply->content = $request->input('content');
+            $reply->user_id = auth()->user()->id;
+            $comment->replies()->save($reply);
+         
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Comment Replies Successfully!',
+                'data' => $reply
             ]);
         } catch (\Throwable $th) {
             info($th);

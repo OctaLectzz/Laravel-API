@@ -65,9 +65,13 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tag $tag)
+    public function show($id)
     {
-        return response()->json(['data' => new TagResource($tag)]);
+        $tag = Tag::findOrFail($id);
+
+        return response()->json([
+            'data' => new TagResource($tag)
+        ]);
     }
 
     /**
