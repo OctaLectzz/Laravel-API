@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Category;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\User;
@@ -27,21 +29,24 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
 
-
         // Tag Create
         $tags = Tag::factory(50)->create();
+        // Category Create
+        $categories = Category::factory(50)->create();
 
         // Post Create
-        Post::factory(50)->create()->each(function ($post) use ($tags) {
+        Post::factory(50)->create()->each(function ($post) use ($tags, $categories) {
             $post->tag()->attach(
                 $tags->random(rand(1, 20))->pluck('id')->toArray()
+            );
+            $post->category()->attach(
+                $categories->random(rand(1, 10))->pluck('id')->toArray()
             );
         });
         // Post Like Create
         PostLike::factory(500)->create();
         // Post Save Create
         PostSave::factory(500)->create();
-
 
         // Comment Create
         Comment::factory(200)->create();

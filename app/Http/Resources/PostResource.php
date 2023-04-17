@@ -30,6 +30,7 @@ class PostResource extends JsonResource
             'created_at' => $this->created_at_format,
             'updated_at' => $this->updated_at_format,
             'tags' => $this->tag ? $this->tag : null,
+            'categories' => $this->category ? $this->category : null,
             'comments' => CommentResource::collection($this->comments)
         ];
     }

@@ -6,9 +6,10 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\PostSaveController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\AuthenticationController;
 
 /*
@@ -139,6 +140,24 @@ Route::prefix('tags')->controller(TagController::class)->group(function () {
     // Delete Tag
     Route::delete('/delete/{tag}', 'destroy')->middleware('auth:sanctum');
 });
-// Route::apiResource('posts', PostController::class);
+// Route::apiResource('tags', TagController::class);
 // Post Tag
 Route::get('/tagpost', [TagController::class, 'getpost']);
+
+
+// ----Category---- //
+Route::prefix('categories')->controller(CategoryController::class)->group(function () {
+    // All Categories
+    Route::get('/', 'index');
+    // Show 1 Category
+    Route::get('/{id}', 'show');
+    // Create Category
+    Route::post('/create', 'store')->middleware('auth:sanctum');
+    // Edit Category
+    Route::put('/edit/{category}', 'update')->middleware('auth:sanctum');
+    // Delete Category
+    Route::delete('/delete/{category}', 'destroy')->middleware('auth:sanctum');
+});
+// Route::apiResource('categories', CategoryController::class);
+// Post Category
+Route::get('/categorypost', [CategoryController::class, 'getpost']);

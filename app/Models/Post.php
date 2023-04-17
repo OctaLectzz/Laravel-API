@@ -39,6 +39,10 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class, "post_tag", "post_id", "tag_id");
     }
+    public function category()
+    {
+        return $this->belongsToMany(Tag::class, "post_category", "post_id", "category_id");
+    }
 
     public function likes()
     {

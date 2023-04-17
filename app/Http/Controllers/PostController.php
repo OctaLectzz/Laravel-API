@@ -45,7 +45,7 @@ class PostController extends Controller
         $validatedData['created_by'] = Auth::user()->name;
         if ($request->hasFile('postImages')) {
             $newPostImages = $request->postImages->getClientOriginalName();
-            $request->postImages->storeAs('postImages', $newPostImages);
+            $request->postImages->storeAs('public/postImages', $newPostImages);
             $validatedData['postImages'] = $newPostImages;
         }
 
@@ -53,6 +53,7 @@ class PostController extends Controller
         try {
             $post = Post::create($validatedData);
             $post->tag()->attach($request->tags);
+            $post->category()->attach($request->categories);
 
             return response()->json([
                 'status' => 'Success',
@@ -102,13 +103,14 @@ class PostController extends Controller
             $validatedData['created_by'] = auth()->user()->name;
             if ($request->hasFile('postImages')) {
                 $newPostImages = $request->postImages->getClientOriginalName();
-                $request->postImages->storeAs('postImages', $newPostImages);
+                $request->postImages->storeAs('public/postImages', $newPostImages);
                 $validatedData['postImages'] = $newPostImages;
             }
 
             
         try {
             $post->tag()->sync($request->tags);
+            $post->category()->sync($request->categories);
             $post->update($validatedData);
 
             return response()->json([
@@ -133,6 +135,7 @@ class PostController extends Controller
     {
         try {
             $post->tag()->detach();
+            $post->category()->detach();
             $post->delete();
     
             return response()->json([
