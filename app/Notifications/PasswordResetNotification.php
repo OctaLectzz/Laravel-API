@@ -43,7 +43,8 @@ class PasswordResetNotification extends Notification
         return (new MailMessage)
                     ->line('RESET YOUR PASSWORD')
                     ->line('----------------------------------------')
-                    ->line($this->token)
+                    ->line("Token: {$this->token}")
+                    ->action('Click to Reset Password', url($this->url))
                     ->line('----------------------------------------')
                     ->line('Thank you for using our Application!');
     }

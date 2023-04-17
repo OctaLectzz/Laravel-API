@@ -43,6 +43,11 @@ class PostController extends Controller
             'tag.integer' => 'pastikan anda memasukan id Tag yang benar'
         ]);
         $validatedData['created_by'] = Auth::user()->name;
+        if ($request->hasFile('postImages')) {
+            $newPostImages = $request->postImages->getClientOriginalName();
+            $request->postImages->storeAs('postImages', $newPostImages);
+            $validatedData['postImages'] = $newPostImages;
+        }
 
         
         try {
@@ -95,6 +100,11 @@ class PostController extends Controller
                 'body.required' => 'Post wajib memiliki konten'
             ]);
             $validatedData['created_by'] = auth()->user()->name;
+            if ($request->hasFile('postImages')) {
+                $newPostImages = $request->postImages->getClientOriginalName();
+                $request->postImages->storeAs('postImages', $newPostImages);
+                $validatedData['postImages'] = $newPostImages;
+            }
 
             
         try {

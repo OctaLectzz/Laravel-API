@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Notifications\PasswordResetNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -163,20 +164,24 @@ class AuthenticationController extends BaseController
 
 
         try {
-            Password::sendResetLink(
-                $request->only('email')
-            );
+            $user = User::where('email', $request->email)->firstOrFail();
+            $token = Str::random(10);
+            $user->forceFill([
+                'remember_token' => $token
+            ])->save();
+            $token = $user->remember_token;
+            $user->sendPasswordResetNotification($token);
 
             return response()->json([
                 'status' => 'Success',
-                'message' => 'Token Reset Password berhasil di kirim, Silahkan cek Email anda untuk mendapatkannya, Silakan tunggu 10 detik untuk ke halaman Reset Password',
+                'message' => 'Token Reset Password berhasil di kirim, Silahkan cek Email anda untuk mendapatkannya',
             ]);
         } catch (\Throwable $th) {
             info($th);
 
             return response()->json([
                 'status' => 'Error',
-                'message' => 'Error pada saat melakukan reset password'
+                'message' => 'Error pada saat melakukan Reset Password'
             ]);
         }
     }
@@ -190,42 +195,34 @@ class AuthenticationController extends BaseController
     public function reset(Request $request)
     {
         $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => ['required', 'confirmed', RulesPassword::defaults()],
+            'email' => ['required'],
+            'token' => ['required'],
+            'password' => ['required', 'confirmed', RulesPassword::defaults()]
         ]);
 
 
         try {
-            $status = Password::reset(
-                $request->only('email', 'password', 'password_confirmation', 'token'),
-                function ($user) use ($request) {
-                    $user->forceFill([
-                        'password' => Hash::make($request->password),
-                        'remember_token' => Str::random(60),
-                    ])->save();
+            $user = User::where('email', $request->email)->first();
+            $resetPasswordToken = $request->input('token');
+            $sessionToken = User::where('remember_token', $resetPasswordToken)->first();
 
-                    $user->tokens()->delete();
-
-                    event(new PasswordReset($user));
-                }
-            );
-
-            // Jika Token tidak Valid atau Kadaluwarsa
-            if ($status == Password::INVALID_TOKEN) {
+            // Jika Token tidak Valid atau Salah
+            if (!$sessionToken) {
                 return response()->json([
-                    'status' => 'Error',
-                    'message' => 'Token tidak valid atau sudah Kadaluwarsa.'
+                    'status' => 'Failed',
+                    'message' => 'Token tidak Valid, atau Format Password salah. Pastikan memasukkan data dengan benar!'
                 ], 422);
             }
+            
+            $user->password = Hash::make($request->password);
+            $user->remember_token = null;
+            $user->save();
 
             // Jika Token Valid atau Benar
-            if ($status == Password::PASSWORD_RESET) {
-                return response()->json([
-                    "status" => "Success",
-                    "message" => "Reset Password berhasil"
-                ], 200);
-            }
+            return response()->json([
+                "status" => "Success",
+                "message" => "Reset Password berhasil"
+            ], 200);
         } catch (\Throwable $th) {
             info($th);
 
