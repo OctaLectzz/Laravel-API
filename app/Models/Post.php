@@ -20,7 +20,7 @@ class Post extends Model
 
     protected $attributes = [
         'views' => 0,
-        'postImages' => ''
+        'image' => ''
     ];
 
     protected $appends = [

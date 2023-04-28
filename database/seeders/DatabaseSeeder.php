@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
                 $tags->random(rand(1, 20))->pluck('id')->toArray()
             );
             $post->category()->attach(
-                $categories->random(rand(1, 10))->pluck('id')->toArray()
+                $categories->random(1)->pluck('id')->toArray()
             );
         });
         // Post Like Create

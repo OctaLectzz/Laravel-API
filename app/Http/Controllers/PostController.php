@@ -17,10 +17,14 @@ class PostController extends Controller
     public function index(Request $request, Post $post)
     {
         $tag = $request->query('tag');
+        $category = $request->query('category');
 
         $posts = $tag ? $post->whereHas('tag', function ($query) use ($tag) {
             $query->where('name', $tag);
-        })->paginate(20) : $post->paginate(12);
+        })->paginate(20) : $post->latest()->paginate(12);
+        $posts = $category ? $post->whereHas('category', function ($query) use ($category) {
+            $query->where('name', $category);
+        })->paginate(20) : $post->latest()->paginate(12);
 
         return PostResource::collection($posts);
     }
@@ -43,10 +47,10 @@ class PostController extends Controller
             'tag.integer' => 'pastikan anda memasukan id Tag yang benar'
         ]);
         $validatedData['created_by'] = Auth::user()->name;
-        if ($request->hasFile('postImages')) {
-            $newPostImages = $request->postImages->getClientOriginalName();
-            $request->postImages->storeAs('public/postImages', $newPostImages);
-            $validatedData['postImages'] = $newPostImages;
+        if ($request->hasFile('image')) {
+            $filename = $request->image->getClientOriginalName();
+            $request->image->storeAs('public/posts', $filename);
+            $validatedData['image'] = asset('storage/posts/' . $filename);;
         }
 
         
@@ -101,11 +105,11 @@ class PostController extends Controller
                 'body.required' => 'Post wajib memiliki konten'
             ]);
             $validatedData['created_by'] = auth()->user()->name;
-            if ($request->hasFile('postImages')) {
-                $newPostImages = $request->postImages->getClientOriginalName();
-                $request->postImages->storeAs('public/postImages', $newPostImages);
-                $validatedData['postImages'] = $newPostImages;
-            }
+            // if ($request->hasFile('image')) {
+            //     $newImage = $request->image->getClientOriginalName();
+            //     $request->image->storeAs('public/image', $newImage);
+            //     $validatedData['image'] = $newImage;
+            // }
 
             
         try {
